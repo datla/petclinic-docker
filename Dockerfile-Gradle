@@ -1,0 +1,14 @@
+# syntax=docker/dockerfile:1
+FROM openjdk:16-alpine3.13
+
+WORKDIR /app
+
+COPY .gradle/ .gradle
+COPY gradlew build.gradle settings.gradle ./
+
+COPY gradle ./gradle
+RUN ./gradlew --offline build
+
+COPY src ./src
+
+CMD ["./gradlew", "bootRun" , "-Dspring-boot.run.profiles=mysql"]
