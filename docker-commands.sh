@@ -1,8 +1,13 @@
 
-docker build -t petclinic .
+# saves in the local directory for volume mounts
+
+# docker run mode for application execution
+docker network create pclinicnw
 docker run -dp 3306:3306 --network pclinicnw  --network-alias mysqlpclinicnw -v /Users/vanilla/Projects/practise/docker/jdocker/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_DATABASE=pclinic mysql:latest
+docker build -t petclinic .
 docker run --rm -dp 8888:8080 --name pclinic-server --network pclinicnw -e MYSQL_URL=jdbc:mysql://mysqlpclinicnw/pclinic petclinic
 
+# docker-compose up commands for this app 
 docker-compose config
 docker-compose up -d --build
 docker-compose logs <id> -f
@@ -10,9 +15,20 @@ docker-compose up
 
 
 
+# saves in the imaginary volume mounts
 
 
+docker network create pclinicnw
+docker run -dp 3306:3306 --name mysql-server --network pclinicnw  --network-alias mysqlpclinicnw -v mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_DATABASE=pclinic mysql:latest
+docker build -t petclinic .
+docker run --rm -dp 8888:8080 --name pclinic-server --network pclinicnw -e MYSQL_URL=jdbc:mysql://mysqlpclinicnw/pclinic petclinic
 
+
+# rollback/reset 
+docker stop pclinic-server mysql-server
+docker rm pclinic-server mysql-server
+docker images rmi 
+docker network rm pclinicnw
 
 
 

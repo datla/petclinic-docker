@@ -9,7 +9,7 @@ services:
       - 8000:8000
     environment:
       - SERVER_PORT=8080
-      - MYSQL_URL=jdbc:mysql://mysqlserver/petclinicdb
+      - MYSQL_URL=jdbc:mysql://mysqlserver/pclinic
     volumes:
       - ./:/app
     command: ./mvnw spring-boot:run -Dspring-boot.run.profiles=mysql -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
@@ -20,10 +20,10 @@ services:
     ports:
       - 3316:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=topsecret
+      - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_USER=petclinic
-      - MYSQL_PASSWORD=pclinic
-      - MYSQL_DATABASE=petclinicdb
+      - MYSQL_PASSWORD=petclinic
+      - MYSQL_DATABASE=pclinic
     volumes:
       - /Users/vanilla/Projects/practise/docker/jdocker/mysqldata/data:/var/lib/mysql
       - /Users/vanilla/Projects/practise/docker/jdocker/mysqldata/config:/etc/mysql/conf.d
