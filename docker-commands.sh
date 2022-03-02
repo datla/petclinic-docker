@@ -22,13 +22,19 @@ docker network create pclinicnw
 docker run -dp 3306:3306 --name mysql-server --network pclinicnw  --network-alias mysqlpclinicnw -v mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_DATABASE=pclinic mysql:latest
 docker build -t petclinic .
 docker run --rm -dp 8888:8080 --name pclinic-server --network pclinicnw -e MYSQL_URL=jdbc:mysql://mysqlpclinicnw/pclinic petclinic
+docker tag petclinic datla/reponame
+docker push datla/petclinicspring:tagname
 
+# run petclinic from docker hub
+docker run --rm -dp 8888:8080 --name pclinic-server --network pclinicnw -e MYSQL_URL=jdbc:mysql://mysqlpclinicnw/pclinic datla/petclinicspring:latest
 
 # rollback/reset 
 docker stop pclinic-server mysql-server
 docker rm pclinic-server mysql-server
-docker images rmi 
+docker rmi petclinic mysql
+docker rmi mysql datla/petclinicspring
 docker network rm pclinicnw
+
 
 
 
