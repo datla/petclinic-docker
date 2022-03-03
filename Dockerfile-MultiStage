@@ -11,9 +11,7 @@ COPY src ./src
 # CMD ["./mvnw","clean", "install"]
 
 FROM base as test
-# for better performance use RUN below . use RUN to test during build itself rather than during run
-#CMD ["./mvnw","test"]
-RUN ["./mvnw", "test"]
+CMD ["./mvnw","test"]
 
 FROM base as development
 CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.profiles=mysql",  "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000'" ]
@@ -26,5 +24,5 @@ EXPOSE 8080
 
 COPY --from=build /app/target/spring-petclinic-*.jar /spring-petclinic.jar
 
-CMD ["java", "-Djava.security.egd=file:/dev/./urandom" , "-jar" , "/spring-petclinic.jar"]
+CMD ["java", "-Djava.security.egd=file:/dev/./urandom" , "jar" , "/spring-petclinic.jar"]
 

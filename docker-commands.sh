@@ -13,20 +13,23 @@ docker-compose up -d --build
 docker-compose logs <id> -f
 docker-compose up
 
-
-
 # saves in the imaginary volume mounts
-
-
 docker network create pclinicnw
 docker run -dp 3306:3306 --name mysql-server --network pclinicnw  --network-alias mysqlpclinicnw -v mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_DATABASE=pclinic mysql:latest
 docker build -t petclinic .
 docker run --rm -dp 8888:8080 --name pclinic-server --network pclinicnw -e MYSQL_URL=jdbc:mysql://mysqlpclinicnw/pclinic petclinic
+# docker run --rm -dp 8888:8080 --name petclinic-prod-image --network pclinicnw -e MYSQL_URL=jdbc:mysql://mysqlpclinicnw/pclinic petclinic
 docker tag petclinic datla/reponame
 docker push datla/petclinicspring:tagname
 
 # run petclinic from docker hub
+docker network create pclinicnw
+docker run -dp 3306:3306 --name mysql-server --network pclinicnw  --network-alias mysqlpclinicnw -v mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_DATABASE=pclinic mysql:latest
 docker run --rm -dp 8888:8080 --name pclinic-server --network pclinicnw -e MYSQL_URL=jdbc:mysql://mysqlpclinicnw/pclinic datla/petclinicspring:latest
+docker run --rm -dp 8888:8080 --name pclinic-server --network pclinicnw -e MYSQL_URL=jdbc:mysql://mysqlpclinicnw/pclinic datla/petclinicprod:latest
+
+docker logs pclinic-server -f
+
 
 # rollback/reset 
 docker stop pclinic-server mysql-server
@@ -35,11 +38,12 @@ docker rmi petclinic mysql
 docker rmi mysql datla/petclinicspring
 docker network rm pclinicnw
 
+#multi stage docker commands // make sure you switch to Dockerfile-MultiStage file which has all these details
+docker build -t petclinic-docker --target test . 
+docker run -it --rm --name petclinic-test petclinic-docker
+docker logs petclinic-docker -f
 
-
-
-
-
+docker-compose -f docker-compose.dev.yml up --build
 
 # app automation and building commands
 ---------------------------------------
