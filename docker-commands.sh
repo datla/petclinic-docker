@@ -45,6 +45,17 @@ docker logs petclinic-docker -f
 
 docker-compose -f docker-compose.dev.yml up --build
 
+
+# deployment to azure
+# create azure access, subscription , resource group before you can do the following
+docker login azure
+docker context create aci myacicontext
+docker context ls
+docker context use myacicontext
+docker --context myacicontext create test-volume --storage-account mystorageaccount
+
+
+
 # app automation and building commands
 ---------------------------------------
 docker build -t todo-app(or tapp) . # use this to build the image and make it available to run container
