@@ -21,6 +21,8 @@ docker run --rm -dp 8888:8080 --name pclinic-server --network pclinicnw -e MYSQL
 # docker run --rm -dp 8888:8080 --name petclinic-prod-image --network pclinicnw -e MYSQL_URL=jdbc:mysql://mysqlpclinicnw/pclinic petclinic
 docker tag petclinic datla/reponame
 docker push datla/petclinicspring:tagname
+## multi stage builds run specifics as below
+docker build --target builder -t alexellis2/href-counter:latest .
 
 # run petclinic from docker hub
 docker network create pclinicnw
